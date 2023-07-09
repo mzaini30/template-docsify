@@ -1,11 +1,27 @@
 import excaliburZen from "./excalibur-zen.js";
 
-let id = '3cf736049cd41daa59c58c7bff2686bf' // id, judul, banyak, bulan, tahun, tipe
+let id = '8fbf69c3daa49234acc91d6e1d97774c' // id, judul, banyak, pekan, tahun, tipe
 let sql = 'https://excalibur.primasolutions.my.id/sql.php'
 
 let tanggalan = new Date();
-let bulan = tanggalan.getMonth() + 1;
+// let bulan = tanggalan.getMonth() + 1;
 let tahun = tanggalan.getFullYear();
+
+// Mendapatkan tanggal saat ini
+var today = new Date();
+
+// Mendapatkan tanggal awal tahun
+var startOfYear = new Date(today.getFullYear(), 0, 1);
+
+// Menghitung selisih dalam milidetik antara tanggal saat ini dan tanggal awal tahun
+var diff = today - startOfYear;
+
+// Mengkonversi selisih dalam milidetik menjadi jumlah pekan
+var week = Math.ceil(diff / (1000 * 60 * 60 * 24 * 7));
+
+// Menampilkan pekan ke berapa
+// console.log("Sekarang adalah pekan ke: " + week);
+
 
 let banyaknya;
 
@@ -14,7 +30,7 @@ export default async function ({ judul, tipe }) {
         id,
         kunci: "cek",
         judul,
-        bulan,
+        pekan: week,
         tahun,
         tipe
     });
@@ -26,7 +42,7 @@ export default async function ({ judul, tipe }) {
             kunci: "tambah-baru",
             judul,
             banyak: "1",
-            bulan,
+            pekan: week,
             tahun, tipe
         });
     } else {
@@ -36,7 +52,7 @@ export default async function ({ judul, tipe }) {
             kunci: "update-dulu",
             banyak: +banyaknya[0].banyak + 1,
             judul,
-            bulan,
+            pekan: week,
             tahun, tipe
         });
     }
@@ -47,8 +63,8 @@ export default async function ({ judul, tipe }) {
 //     let terbaru = await excaliburZen(sql, {
 //       id,
 //       kunci: "ambil-terbanyak",
-//       bulan,
-//       tahun,
+//       pekan: week,
+//       tahun, tipe: 'Aplikasi Android'
 //     });
 //     terbaru = await terbaru.json();
 //     terbaru = terbaru.sort((b, a) => +a.banyak - +b.banyak);
